@@ -1,7 +1,14 @@
-FROM python:3.13-alpine
+FROM python:3.11-slim
+
 WORKDIR /code
-COPY ./requirements.txt /code/requirements.txt
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-COPY ./main.py /code/main.py
-COPY ./form.html /code/form.html
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
+
+COPY requirements.txt /code/
+
+RUN pip install --upgrade pip setuptools wheel \
+    && pip install --no-cache-dir -r requirements.txt
+
+COPY . /code
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
